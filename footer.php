@@ -1,0 +1,1 @@
+<hr><br>&copy; 2016 <a class="gitty" href="https://github.com/sfholleufer">Sebastian Frederik Holleufer - Github</a>
