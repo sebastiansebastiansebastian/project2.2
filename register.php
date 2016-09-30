@@ -6,19 +6,26 @@ if( isset($_SESSION['user_id']) ){
 	header("Location: /");
 }
 
+/* requires that database.php file, so you don't have to include in here. Like an external stylesheet */
 require 'database.php';
 
 $message = '';
 
+/* If it's not empty, excecute all of this */
 if(!empty($_POST['email']) && !empty($_POST['password'])):
 	
-	// Enter the new user in the database
+	/* Enter the new user in the database
+	   :email :password protects against SQL injections. 
+	   They are inserted in the paramter below it.*/
 	$sql = "INSERT INTO users (email, password) VALUES (:email, :password)";
 	$stmt = $conn->prepare($sql);
 
 	$stmt->bindParam(':email', $_POST['email']);
+	
+	/* using the password_hash which is a predefined function and PASSWORD_BRCRYPT to safely store the password in the database */
 	$stmt->bindParam(':password', password_hash($_POST['password'], PASSWORD_BCRYPT));
 
+	/* if statement is excecuted correctly and the data is inserted into the database, do this, otherwise, do that */
 	if( $stmt->execute() ):
 		$message = 'Successfully created new user';
 	else:
@@ -42,7 +49,8 @@ endif;
 	<div class="header">
 		<?php require 'menu.php'; ?>
 	</div>
-
+    
+	<!-- If it's not empty, we have this message for you. The "succes" or "failure" text. -->
 	<?php if(!empty($message)): ?>
 		<p><?= $message ?></p>
 	<?php endif; ?>
